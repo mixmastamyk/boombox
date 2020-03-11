@@ -5,6 +5,8 @@
 
     Inspired by Playsound.
 
+    TODO:  make tone gen OO as well.
+
     ::
 
         from boombox import BoomBox

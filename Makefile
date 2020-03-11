@@ -3,4 +3,4 @@ include ../../Makefile.common
 
 test:
 
-	pyflakes *.py */*.py
+	pyflakes *.py
