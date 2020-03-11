@@ -2,102 +2,183 @@
 Boom Box
 =============
 
-This is a short cross-platform audio-file player module,
-useful for plain to fancy system sound events, rings, beeps, and the like.
-It's a one file pure-python module that can easily be copied into a project
-if need be.
+.. class:: align-center center
 
-(While you could play an eight-minute Grateful Dead tune with it,
-you probably wouldn't want to.)
+    ::
 
-I couldn't find a good module for this.
-"playsound" was quite close but had a number of issues and appeared abandoned.
-So, I whipped this up with heavy inspiration.
+        ┏┓ ┏━┓┏━┓┏┳┓┏┓ ┏━┓╻ ╻
+        ╺━╸╺━╸   ┣┻┓┃ ┃┃ ┃┃┃┃┣┻┓┃ ┃┏╋┛   ╺━╸╺━╸
+        ╺━╸   ┗━┛┗━┛┗━┛╹ ╹┗━┛┗━┛╹ ╹   ╺━╸
+
+        ╭══════════════╮
+        ╭───────────┬──┴──────────────┴──┬───────────╮
+        │(0) ___    │ ⯀  [:::::::] [] ( )│    ___ (0)│
+        │  /:::::\  │────────────────────│  /:::::\  │
+        │ |:::::::| │  │   ──    ──   │  │ |:::::::| │
+        │ |:::::::| │  │ ─(⚙)────(⚙)─ │  │ |:::::::| │
+        │  \:::::/  │  │────▯▯▯▯▯▯────│♫ │  \:::::/  │
+        ╰────────────────────────────────┴───────────╯
+
+
+This is a small cross-platform audio-file player module,
+useful for plain-to-fancy system sound events, rings, beeps, and the like.
+I couldn't find a good one for this.
+"playsound" was very close at first glance but had a number of issues and
+appeared abandoned.
+
+BoomBox can wait for the file to finish or play in the background.
+Though you could play an eight-minute Grateful Dead jam with it,
+you probably wouldn't want to.
+
+
+.. ~ It's a one file pure-python module that can easily be copied into a project
+.. ~ if need be.   NOT ANYMORE
+.. ~ ┏┓ ┏━┓┏━┓┏┳┓┏┓ ┏━┓╻ ╻
+.. ~ ┣┻┓┃ ┃┃ ┃┃┃┃┣┻┓┃ ┃┏╋┛
+.. ~ ┗━┛┗━┛┗━┛╹ ╹┗━┛┗━┛╹ ╹
 
 
 Usage
 -------------------
 
+Quick start, a cross-platform player looks like this:
+
 .. code-block:: python
 
-    from boombox import play
+    from boombox import BoomBox  # power on
 
-    path = '/usr/share/sounds/ubuntu/stereo/phone-outgoing-busy.ogg'
+    boombox = BoomBox("There's_no_stoppin_us.ogg")  # load cassette
 
-    play(path)
+    boombox.play()  # ⏯
 
 
-There are a number of parameters that can be passed.
+The play function also returns the instance,
+so if in a hurry one could do:
+
+.. code-block:: python
+
+    boombox = BoomBox(jam).play()  # or even
+    BoomBox(jam).play()  # less efficient
+
+
+There are a number of other keyword parameters that can be passed.
 Such as:
 
-- wait
-- timeout_ms
-- duration_ms
+- ``wait``
+- ``timeout_ms``
+- ``duration_ms``
+- ``binary_path`` (ChildBoomBox: to a CLI player)
 
-Not all arguments are supported on every implementation.
-
-
-Support
--------------------
-
-Boom Box supports:
-
-- Windows
-
-  - WinAPI (default)
-  - `PyAudio <https://people.csail.mit.edu/hubert/pyaudio/docs/>`_
-  - Command-line player
-
-- Mac OSX, via:
-
-  - `PyObjc <https://pypi.org/project/pyobjc/>`_ (default)
-  - `PyAudio <https://people.csail.mit.edu/hubert/pyaudio/docs/>`_
-  - Command-line player
-
-- POSIX, via:
-
-  - `Gstreamer <https://gstreamer.freedesktop.org/documentation/installing/on-linux.html>`_
-    (default)
-  - `PyAudio <https://people.csail.mit.edu/hubert/pyaudio/docs/>`_
-  - Command-line player (paplay, others)
-
-You may have to install one of these audio libraries for Boom Box to work.
-Check their documentation for details.
-
+Not all arguments are supported on every implementation,
+but they will not balk if given.
 
 
 Implementations
 -------------------
 
-There are a number of implementations if you'd like to bypass the chosen
-default:
+There are a number of implementations if you'd like to pick a specific one and
+bypass the platform default:
+
+- Windows
+
+  - WinBoomBox (default, wav only)
+  - `PyAudioBoomBox <https://people.csail.mit.edu/hubert/pyaudio/docs/>`_ (wav only)
+  - ChildBoomBox - Command-line player (powershell, others)
+
+.. ~ spacer
+
+- Mac OSX:
+
+  - MacOSBoomBox - `PyObjc <https://pypi.org/project/pyobjc/>`_ (default, multiformat)
+  - PyAudioBoomBox - `PyAudio <https://people.csail.mit.edu/hubert/pyaudio/docs/>`_ (wav only)
+  - ChildBoomBox - Command-line player (afplay, others)
+
+.. ~ spacer
+
+- POSIX:
+
+  - GstBoomBox - `Gstreamer <https://gstreamer.freedesktop.org/documentation/installing/on-linux.html>`_
+    (default, multiformat)
+  - PyAudioBoomBox - `PyAudio <https://people.csail.mit.edu/hubert/pyaudio/docs/>`_ (wav only)
+  - ChildBoomBox - Command-line player (paplay, aplay, others)
+
+
+Add this to to choose a different implementation:
 
 .. code-block:: python
 
-    play_gstreamer(sound_file, block=None, timeout_ms=None)
-    play_macos(sound_file)
-    play_oss(sound_file)        # needs work
-    play_pyaudio(sound_file)    # wav only
-    play_windows(sound_file)    # wav only
+    from boombox import PyAudioBoomBox as BoomBox
 
-    # CLI players
-    play_subprocess(sound_file, binary_path=None)
-    play_linux_call(sound_file, binary_path='paplay')
-    play_macos_call(sound_file, binary_path='afplay')
 
-    # add this to your script:
-    from boombox import play_linux_call as play
+You may have to install one of the audio libraries above for Boom Box to work.
+
+::
+
+    ⏵ pip install --user boombox[all]  # or pyaudio, pyobjc, pygobject
 
 
 Playback Control
 -------------------
 
-A very rudimentary playback interface is returned by the play functions if
-one needs a bit of control:
+A simple playback interface is returned by the instance:
 
 .. code-block:: python
 
-    boombox = play(path)
-
     boombox.stop()  # Enough!
     boombox.play()  # One more time!
+
+
+.. class:: align-center center
+
+    ::
+
+        ╭───────────────────────────────────────────╮
+        │ ╭───────────────────────────────────────╮ │
+        │ │ ╭───────────────────────────────────╮ │ │
+        │ │ │ /\ :  Electric Boogaloo     90 min│ │ │
+        │ │ │/──\: .....................  NR [✓]│ │ │
+        │ │ ╰───────────────────────────────────╯ │ │
+        │ │      //─\\   ╭....:....╮   //─\\      │ │
+        │ │     ││( )││  │)       (│  ││( )││     │ │
+        │ │      \\─//   ╰....:....╯   \\─//      │ │
+        │ │       _ _ ._  _ _ .__|_ _.._  _       │ │
+        │ │      (_(_)│ |(_(/_│  │_(_||_)(/_      │ │
+        │ │               low noise   |           │ │
+        │ ╰─────── ─────────────────────── ───────╯ │
+        │        /    []             []    \        │
+        │       /  ()                   ()  \       │
+        ╰──────/─────────────────────────────\──────╯
+
+
+Tone Generation
+-------------------
+
+Tones are generated like this:
+
+.. code-block:: python
+
+        from boombox import make_tone
+
+        make_tone(frequency_hz=500, duration_ms=1000, volume=.1)
+
+
+.. class:: align-center center
+
+    ::
+
+        ▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂
+        ╲▂▂▂▂╱╲▂▂▂▂╱╲▂▂▂
+        ▔╲▂▂▂╱▔╲▂▂▂╱▔╲▂▂
+        ▔▔╲▂▂╱▔▔╲▂▂╱▔▔╲▂
+        ▔▔▔╲▂╱▔▔▔╲▂╱▔▔▔╲
+        ▔▔▔▔╲╱▔▔▔▔╲╱▔▔▔▔
+        ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+
+.. class:: align-center center
+
+    ::
+
+        ┏━┓╻ ╻╻ ╻┏━╸┏━┓╻
+        ┗━┓┣━┫┗┳┛┣╸ ┗━┓╹
+        ┗━┛╹ ╹ ╹ ┗━╸┗━┛╹
+

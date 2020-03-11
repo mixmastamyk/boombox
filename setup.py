@@ -48,7 +48,7 @@ extras_require['all'] = tuple(chain.from_iterable(extras_require.values()))
 
 setup(
     name                = name,
-    version             = get_version(join(name, name + '.py')),
+    version             = get_version(name + '.py'),
     description         = 'A short cross-platform pure-python audio file player module.',
     author              = 'Mike Miller',
     author_email        = 'mixmastamyk@%s' % repo_provider,
@@ -64,7 +64,7 @@ setup(
 
     long_description    = slurp('readme.rst'),
     classifiers         = [
-        'Development Status :: 4 - Beta',
+        'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)',
         'Operating System :: MacOS :: MacOS X',
