@@ -363,12 +363,12 @@ ul.auto-toc {
 <div class="document" id="boom-box">
 <h1 class="title">Boom Box</h1>
 
-<pre class="align-center center literal-block">
-┏┓ ┏━┓┏━┓┏┳┓┏┓ ┏━┓╻ ╻
-╺━╸╺━╸   ┣┻┓┃ ┃┃ ┃┃┃┃┣┻┓┃ ┃┏╋┛   ╺━╸╺━╸
-╺━╸   ┗━┛┗━┛┗━┛╹ ╹┗━┛┗━┛╹ ╹   ╺━╸
+<pre class="literal-block">
+             ┏┓ ┏━┓┏━┓┏┳┓┏┓ ┏━┓╻ ╻
+    ╺━╸╺━╸   ┣┻┓┃ ┃┃ ┃┃┃┃┣┻┓┃ ┃┏╋┛   ╺━╸╺━╸
+       ╺━╸   ┗━┛┗━┛┗━┛╹ ╹┗━┛┗━┛╹ ╹   ╺━╸
 
-╭══════════════╮
+               ╭══════════════╮
 ╭───────────┬──┴──────────────┴──┬───────────╮
 │(0) ___    │ ⯀  [:::::::] [] ( )│    ___ (0)│
 │  /:::::\  │────────────────────│  /:::::\  │
@@ -403,8 +403,8 @@ you probably wouldn't want to.</p>
 <p>The play function also returns the instance,
 so if in a hurry one could do:</p>
 <pre class="code python literal-block">
-<span class="name">boombox</span> <span class="operator">=</span> <span class="name">BoomBox</span><span class="punctuation">(</span><span class="name">jam</span><span class="punctuation">)</span><span class="operator">.</span><span class="name">play</span><span class="punctuation">()</span>  <span class="comment single"># or even</span>
-<span class="name">BoomBox</span><span class="punctuation">(</span><span class="name">jam</span><span class="punctuation">)</span><span class="operator">.</span><span class="name">play</span><span class="punctuation">()</span>  <span class="comment single"># less efficient</span>
+<span class="name">boombox</span> <span class="operator">=</span> <span class="name">BoomBox</span><span class="punctuation">(</span><span class="name">slow_jam</span><span class="punctuation">)</span><span class="operator">.</span><span class="name">play</span><span class="punctuation">()</span>  <span class="comment single"># or even</span>
+<span class="name">BoomBox</span><span class="punctuation">(</span><span class="name">slow_jam</span><span class="punctuation">)</span><span class="operator">.</span><span class="name">play</span><span class="punctuation">()</span>  <span class="comment single"># less efficient for multiple calls</span>
 </pre>
 <p>There are a number of other keyword parameters that can be passed.
 Such as:</p>
@@ -464,7 +464,7 @@ bypass the platform default:</p>
 <span class="name">boombox</span><span class="operator">.</span><span class="name">stop</span><span class="punctuation">()</span>  <span class="comment single"># Enough!</span>
 <span class="name">boombox</span><span class="operator">.</span><span class="name">play</span><span class="punctuation">()</span>  <span class="comment single">#&nbsp;One more time!</span>
 </pre>
-<pre class="align-center center literal-block">
+<pre class="literal-block">
 ╭───────────────────────────────────────────╮
 │ ╭───────────────────────────────────────╮ │
 │ │ ╭───────────────────────────────────╮ │ │
@@ -491,7 +491,7 @@ bypass the platform default:</p>
 
 <span class="name">make_tone</span><span class="punctuation">(</span><span class="name">frequency_hz</span><span class="operator">=</span><span class="literal number integer">500</span><span class="punctuation">,</span> <span class="name">duration_ms</span><span class="operator">=</span><span class="literal number integer">1000</span><span class="punctuation">,</span> <span class="name">volume</span><span class="operator">=.</span><span class="literal number integer">1</span><span class="punctuation">)</span>
 </pre>
-<pre class="align-center center literal-block">
+<pre class="literal-block">
 ▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂
 ╲▂▂▂▂╱╲▂▂▂▂╱╲▂▂▂
 ▔╲▂▂▂╱▔╲▂▂▂╱▔╲▂▂
@@ -500,7 +500,7 @@ bypass the platform default:</p>
 ▔▔▔▔╲╱▔▔▔▔╲╱▔▔▔▔
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 </pre>
-<pre class="align-center center literal-block">
+<pre class="literal-block">
 ┏━┓╻ ╻╻ ╻┏━╸┏━┓╻
 ┗━┓┣━┫┗┳┛┣╸ ┗━┓╹
 ┗━┛╹ ╹ ╹ ┗━╸┗━┛╹

@@ -34,7 +34,7 @@ def slurp(filename):
 name = 'boombox'
 repo_provider = 'github.com'
 install_requires = (
-    'ezenv',
+    #~ 'ezenv',
 )
 extras_require = dict(
     mac=('pyobjc',),
