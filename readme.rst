@@ -17,6 +17,12 @@ Boom Box
     │  \:::::/  │  │────▯▯▯▯▯▯────│♫ │  \:::::/  │
     ╰────────────────────────────────┴───────────╯
 
+.. image:: media/electric-boogaloo-sm.jpg
+    :align: center
+    :alt: There's no stoppin' us!
+    :target: https://www.youtube.com/watch?v=bFaPBFd6QRk
+    :width: 90%
+
 
 This is a small cross-platform audio-file player module,
 useful for plain-to-fancy system sound events, rings, beeps, and the like.
@@ -110,7 +116,8 @@ Simply add an import to your script to choose a different one:
     from boombox import PyAudioBoomBox as BoomBox
 
 
-You may have to install one of the audio libraries above for Boom Box to work.
+You may have to install one of the audio libraries above for all of the
+functionality of Boom Box to work.
 
 ::
 
@@ -151,7 +158,7 @@ A simple playback interface is returned by the instance:
 Tone Generation
 -------------------
 
-Tones are generated like this:
+Tones may be generated like so:
 
 .. code-block:: python
 
@@ -168,7 +175,6 @@ Tones are generated like this:
     ▔▔▔▔╲╱▔▔▔▔╲╱▔▔▔▔
     ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 
-    ┏━┓╻ ╻╻ ╻┏━╸┏━┓╻
-    ┗━┓┣━┫┗┳┛┣╸ ┗━┓╹
-    ┗━┛╹ ╹ ╹ ┗━╸┗━┛╹
-
+    ┏┓╻┏━┓   ┏━┓┏┓╻┏━╸   ╺┳┓┏━┓┏━╸┏━┓   ╻╺┳╸   ┏┓ ┏━╸╺┳╸╺┳╸┏━╸┏━┓   ╻
+    ┃┗┫┃ ┃   ┃ ┃┃┗┫┣╸     ┃┃┃ ┃┣╸ ┗━┓   ┃ ┃    ┣┻┓┣╸  ┃  ┃ ┣╸ ┣┳┛   ╹
+    ╹ ╹┗━┛   ┗━┛╹ ╹┗━╸   ╺┻┛┗━┛┗━╸┗━┛   ╹ ╹    ┗━┛┗━╸ ╹  ╹ ┗━╸╹┗╸   ╹
