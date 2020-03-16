@@ -23,7 +23,7 @@ from time import sleep as _sleep
 
 
 log = logging.getLogger(__name__)
-__version__ = '0.54'
+__version__ = '0.55'
 
 
 class _BoomBoxBase:
@@ -551,13 +551,14 @@ if __name__ == '__main__':
 
     if os.name == 'nt':
         log.info('Trying Alias…')
-        BoomBox(
+        winboom = BoomBox(
             sound_file='SystemHand',
             is_alias=True,
             duration_ms=2_000,
-            #~ # wait=True,
-            wait=False,
+            wait=True,
+            #~ wait=False,
         )
+        winboom.play()
         log.debug('sleeping…')
         _sleep(1)
         log.debug('done')

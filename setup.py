@@ -49,7 +49,8 @@ extras_require['all'] = tuple(chain.from_iterable(extras_require.values()))
 setup(
     name                = name,
     version             = get_version(name + '.py'),
-    description         = 'A short cross-platform pure-python audio file player module.',
+    description         = 'A short, cross-platform, pure-python audio file '
+                          ' player and tone-generating module.',
     author              = 'Mike Miller',
     author_email        = 'mixmastamyk@%s' % repo_provider,
     url                 = 'https://%s/mixmastamyk/%s' % (repo_provider, name),
