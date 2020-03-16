@@ -23,7 +23,7 @@ from time import sleep as _sleep
 
 
 log = logging.getLogger(__name__)
-__version__ = '0.56a0'
+__version__ = '0.56a1'
 
 
 class _BoomBoxBase:
