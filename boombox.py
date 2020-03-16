@@ -15,7 +15,7 @@
         boombox.stop()
 
         # Tones
-        boombox.make_tone(sound_file, wait=True)
+        boombox.play_tone(sound_file, wait=True)
 '''
 import logging
 import os
@@ -25,15 +25,15 @@ from time import sleep as _sleep
 
 
 log = logging.getLogger(__name__)
-__version__ = '0.52'
+__version__ = '0.53'
 
 
 class _BoomBoxBase:
     ''' Base class for proxy control of an audio player. '''
 
-    def make_tone(self, **kwargs):
+    def play_tone(self, **kwargs):
         ''' Generate a tone for beep or ring-like purposes. '''
-        msg = 'make_tone() not implemented, is PyAudio installed?'
+        msg = 'play_tone() not implemented, is PyAudio installed?'
         raise NotImplementedError(msg)
 
     def play(self):
@@ -52,7 +52,7 @@ class _BoomBoxBase:
             raise PermissionError(repr(path))
         if not os.path.getsize(path):
             raise EOFError(repr(path))
-        log.debug('verified %r', path)
+        log.debug('verified: %r', path)
         return path
 
 
@@ -104,7 +104,7 @@ class WinBoomBox(_BoomBoxBase):
         log.debug('stopping: %r', self._sound_file)
         self._player.PlaySound(None, 0)
 
-    def make_tone(self, frequency_hz, duration_ms, **kwargs):
+    def play_tone(self, frequency_hz, duration_ms, **kwargs):
         log.debug('trying winsound.Beep…')
         self._player.Beep(frequency_hz, duration_ms)  # e.g. (1000, 500)
 
@@ -140,7 +140,7 @@ class MacOSBoomBox(_BoomBoxBase):
         log.debug('stopping: %r', self._sound_file)
         self._player.stop()
 
-    def make_tone(self, frequency_hz, duration_ms, **kwargs):
+    def play_tone(self, frequency_hz, duration_ms, **kwargs):
         ''' Generate a beep tone. '''
         msg = 'Tone generation not yet implemented on darwin.'
         log.warning(msg)
@@ -181,10 +181,11 @@ try:
 
         def _on_message(self, bus, message):
             ''' Reset playback at end of stream. '''
+            log.debug('message1 sent.')
             MessageType = self._gst.MessageType
             mtype = message.type
-            self._playbin.set_state(self._stopped)
             if mtype == MessageType.EOS:
+                self._playbin.set_state(self._stopped)
                 log.debug('end of stream: %r', self._sound_file)
             elif mtype == MessageType.ERROR:
                 err, debug = message.parse_error()
@@ -193,7 +194,7 @@ try:
         def play(self):
             playbin = self._playbin
             playbin.set_state(self._stopped)  # rewind
-            log.debug('playing %r', self._sound_file)
+            log.debug('playing: %r', self._sound_file)
             result = playbin.set_state(self._playing)
             if result != self._gst.StateChangeReturn.ASYNC:
                 raise RuntimeError('playbin.set_state returned: %r' % result)
@@ -217,40 +218,50 @@ try:
             log.debug('stopping: %r', self._sound_file)
             self._playbin.set_state(self._stopped)
 
-        def make_tone(self, frequency_hz, duration_ms, volume=0.2,
-                      sample_rate=22050):
-            raise NotImplementedError('yet.')
+        def play_tone(self, frequency_hz, duration_ms, volume=0.2,
+                      sample_rate=22050, **kwargs):
+
             self._player = player = Gst.Pipeline.new("player")
             source = Gst.ElementFactory.make("audiotestsrc", "source")
-            log.warn('source dir: %r', dir(source))
-            #~  Audio-test-src-wave = sine (0) – Sine
-            source.set_property("wave", 0)  # not sure these work, don't seem to
+            source.set_property("wave", 0)  # Audio-test-src-wave = sine (0)
             source.set_property("freq", frequency_hz)
             source.set_property("volume", volume)
 
-            #~ decoder = Gst.ElementFactory.make("mad", "mp3-decoder")
+            # calculating duration is quite clumsy, not sure if correct:
+            sfactor = 44_100/sample_rate
+            num_buffers = round(duration_ms/10)  # take one zero from here
+            samples_per = round((sample_rate * sfactor)/100)  # add here
+            #~ print(' * num-buffers ', num_buffers)
+            #~ print(' * samples per buffer ', samples_per)
+            #~ print('   = %2.4f secs' % (num_buffers * samples_per / 44_100 ))
+            source.set_property("num-buffers", num_buffers)
+            source.set_property("samplesperbuffer", samples_per)
+
             conv = Gst.ElementFactory.make("audioconvert", "converter")
             sink = Gst.ElementFactory.make("autoaudiosink", "output")
-
+            # connect
             player.add(source)
-            #~ player.add(decoder)
             player.add(conv)
             player.add(sink)
-            #~ source.link(decoder)
             source.link(conv)
-            #~ decoder.link(conv)
             conv.link(sink)
 
             bus = player.get_bus()
             bus.add_signal_watch()
             bus.connect("message", self._on_message2)
 
-        def _on_message2(self, bus, message):
+            result = player.set_state(self._playing)
+            if result != self._gst.StateChangeReturn.ASYNC:
+                raise RuntimeError('player.set_state returned: %r' % result)
+
+        def _on_message2(self, bus, message):  # doesn't run
+            log.debug('message2 sent.')
+            MessageType = self._gst.MessageType
             mtype = message.type
-            self._player.set_state(self._stopped)
-            if mtype == Gst.MessageType.EOS:
+            if mtype == MessageType.EOS:
                 log.debug('end of stream.')
-            elif mtype == Gst.MessageType.ERROR:
+                self._player.set_state(self._stopped)
+            elif mtype == MessageType.ERROR:
                 err, debug = message.parse_error()
                 log.error('%r: %r' % (err, debug))
 
@@ -260,7 +271,7 @@ except ImportError:
 
 # ---- X-Plaform -------------------------------------------------------------
 try:
-    import pyaudio  # Might exist on any OS
+    import pyaudio
 
     class PyAudioBoomBox(_BoomBoxBase):
         ''' Play an audio file via PyAudio.
@@ -340,7 +351,7 @@ try:
             except AttributeError:
                 pass
 
-        def make_tone(self, frequency_hz, duration_ms, volume=0.2,
+        def play_tone(self, frequency_hz, duration_ms, volume=0.2,
                       sample_rate=22050):
             ''' Generate a tone at the given frequency.
 
@@ -480,7 +491,6 @@ elif sys.platform == 'darwin':  # Think different
         BoomBox = ChildBoomBox
 
 elif os.name == 'posix':        # Tron leotards
-    #~ _example_file = '/usr/share/sounds/ubuntu/stereo/desktop-login.ogg'
     _example_file = '/usr/share/sounds/sound-icons/guitar-12.wav'
     try:
         log.debug('trying gstreamer…')
@@ -522,22 +532,28 @@ if __name__ == '__main__':
     else:
         _sound_file = _example_file
 
-    log.info('Playing media…… %r', _sound_file)
+    log.info('Playing media:… %r', _sound_file)
     _boombox = BoomBox(_sound_file, duration_ms=2_000, wait=True)
     _boombox.play()
-    #~ log.debug('cutting short…')
-    #~ _sleep(.5)
-    #~ _boombox.stop()
-    #~ _sleep(1)
-    #~ log.debug('starting again…')
-    #~ _boombox.play()
-    #~ log.debug('sleeping…')
+    log.debug('cutting short…')
+    _sleep(.5)
+    _boombox.stop()
+    _sleep(1)
+    log.debug('starting again…')
+    _boombox.play()
+    log.debug('sleeping…')
     _sleep(2)
 
     log.info('Generating tone…')
-    _boombox.make_tone(frequency_hz=500, duration_ms=1000, volume=.1)
+    _boombox.play_tone(frequency_hz=500, duration_ms=2_000, volume=.1)
     log.debug('sleeping…')
-    _sleep(2)
+    print(0)
+    _sleep(1)
+    print(1)
+    _sleep(1)
+    print(2)
+    _sleep(1)
+    print(3)
 
     if os.name == 'nt':
         log.info('Trying Alias…')
@@ -545,7 +561,7 @@ if __name__ == '__main__':
             sound_file='SystemHand',
             is_alias=True,
             duration_ms=2_000,
-            #~ wait=True,
+            #~ # wait=True,
             wait=False,
         )
         log.debug('sleeping…')
