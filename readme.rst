@@ -17,7 +17,7 @@ Boom Box
     │  \:::::/  │  │────▯▯▯▯▯▯────│♫ │  \:::::/  │
     ╰────────────────────────────────┴───────────╯
 
-.. image:: media/electric-boogaloo-sm.jpg
+.. image:: https://raw.githubusercontent.com/mixmastamyk/boombox/master/media/electric-boogaloo-sm.jpg
     :align: center
     :alt: Image: There's no stoppin' us!
     :target: https://www.youtube.com/watch?v=bFaPBFd6QRk
