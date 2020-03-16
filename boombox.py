@@ -3,8 +3,6 @@
               module for Python.
     © 2020, Mike Miller - Released under the LGPL, version 3+.
 
-    TODO:  make tone gen OO as well.
-
     ::
 
         from boombox import BoomBox
