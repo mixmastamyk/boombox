@@ -25,7 +25,7 @@ from time import sleep as _sleep
 
 
 log = logging.getLogger(__name__)
-__version__ = '0.53'
+__version__ = '0.54'
 
 
 class _BoomBoxBase:
@@ -231,9 +231,11 @@ try:
             sfactor = 44_100/sample_rate
             num_buffers = round(duration_ms/10)  # take one zero from here
             samples_per = round((sample_rate * sfactor)/100)  # add here
+            if self._wait
+                est_seconds = (num_buffers * samples_per / 44_100)
             #~ print(' * num-buffers ', num_buffers)
             #~ print(' * samples per buffer ', samples_per)
-            #~ print('   = %2.4f secs' % (num_buffers * samples_per / 44_100 ))
+            #~ print('   = %2.4f secs' % est_seconds)
             source.set_property("num-buffers", num_buffers)
             source.set_property("samplesperbuffer", samples_per)
 
@@ -253,6 +255,8 @@ try:
             result = player.set_state(self._playing)
             if result != self._gst.StateChangeReturn.ASYNC:
                 raise RuntimeError('player.set_state returned: %r' % result)
+            if self._wait:
+                _sleep(round(est_seconds + .1, 3))
 
         def _on_message2(self, bus, message):  # doesn't run
             log.debug('message2 sent.')
@@ -546,14 +550,6 @@ if __name__ == '__main__':
 
     log.info('Generating tone…')
     _boombox.play_tone(frequency_hz=500, duration_ms=2_000, volume=.1)
-    log.debug('sleeping…')
-    print(0)
-    _sleep(1)
-    print(1)
-    _sleep(1)
-    print(2)
-    _sleep(1)
-    print(3)
 
     if os.name == 'nt':
         log.info('Trying Alias…')
