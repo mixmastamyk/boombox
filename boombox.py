@@ -23,7 +23,7 @@ from time import sleep as _sleep
 
 
 log = logging.getLogger(__name__)
-__version__ = '0.55'
+__version__ = '0.56a0'
 
 
 class _BoomBoxBase:
@@ -50,6 +50,8 @@ class _BoomBoxBase:
             raise PermissionError(repr(path))
         if not os.path.getsize(path):
             raise EOFError(repr(path))
+        if os.name == 'nt':
+            path = path.replace('\\', '/')  # :-/
         log.debug('verified: %r', path)
         return path
 
@@ -426,8 +428,8 @@ class ChildBoomBox(_BoomBoxBase):
             err_msg = 'CLI player not found, set binary_path parameter.'
             if os.name == 'nt':             # I'm a PC
                 args.extend(
-                    ('powershell', '-c', # ;
-                    '(New-Object Media.SoundPlayer {sound_file!r}).PlaySync()')
+                    ('powershell', '-c', '(New-Object Media.SoundPlayer ',
+                    f'{sound_file!r}).PlaySync()')
                 )
             elif sys.platform == 'darwin':  # Think different
                 path = self._search_path('afplay')
@@ -481,6 +483,7 @@ class ChildBoomBox(_BoomBoxBase):
 if os.name == 'nt':             # I'm a PC
     _example_file = 'c:/Windows/Media/Alarm08.wav'
     BoomBox = WinBoomBox
+    #~ BoomBox = ChildBoomBox  # powershell
 
 elif sys.platform == 'darwin':  # Think different
     _example_file = '/System/Library/Sounds/Ping.aiff'
@@ -556,7 +559,7 @@ if __name__ == '__main__':
             is_alias=True,
             duration_ms=2_000,
             wait=True,
-            #~ wait=False,
+            # wait=False,
         )
         winboom.play()
         log.debug('sleeping…')
