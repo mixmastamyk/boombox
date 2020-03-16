@@ -17,12 +17,13 @@ Boom Box
     │  \:::::/  │  │────▯▯▯▯▯▯────│♫ │  \:::::/  │
     ╰────────────────────────────────┴───────────╯
 
-.. image:: https://raw.githubusercontent.com/mixmastamyk/boombox/master/media/electric-boogaloo-sm.jpg
+.. image:: media/electric-boogaloo-sm.jpg
     :align: center
-    :alt: There's no stoppin' us!
+    :alt: Image: There's no stoppin' us!
     :target: https://www.youtube.com/watch?v=bFaPBFd6QRk
     :width: 90%
 
+|
 
 This is a small cross-platform audio-file player module,
 useful for plain-to-fancy system sound events, rings, beeps, and the like.
