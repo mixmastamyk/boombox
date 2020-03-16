@@ -231,7 +231,7 @@ try:
             sfactor = 44_100/sample_rate
             num_buffers = round(duration_ms/10)  # take one zero from here
             samples_per = round((sample_rate * sfactor)/100)  # add here
-            if self._wait
+            if self._wait:
                 est_seconds = (num_buffers * samples_per / 44_100)
             #~ print(' * num-buffers ', num_buffers)
             #~ print(' * samples per buffer ', samples_per)
