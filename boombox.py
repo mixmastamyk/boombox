@@ -90,6 +90,7 @@ class WinBoomBox(_BoomBoxBase):
             log.debug('not waiting for audio to finish.')
             flags |= winsound.SND_ASYNC
 
+        log.debug('flags: %s', flags)
         self._flags = flags
         self._kwargs = kwargs
         self._player = winsound

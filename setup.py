@@ -37,8 +37,8 @@ install_requires = (
     # 'foo',
 )
 extras_require = dict(
-    mac=('pyobjc',),
-    gstreamer=('PyGObject',),
+    mac=('pyobjc-core',),
+    gstreamer=('PyGObject',),  # TODO: works on mac?
     pyaudio=('pyaudio',),
 )
 # build entry for all extras:
