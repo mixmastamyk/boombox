@@ -529,7 +529,7 @@ if __name__ == '__main__':
             )
         except ImportError:
             logging.basicConfig(level='DEBUG',
-                format=('%(levelname)s %(funcName)s:%(lineno)s %(message)s'),
+                format='%(levelname)s %(funcName)s:%(lineno)s %(message)s',
             )
     log.debug('boombox version: %s', __version__)
 
